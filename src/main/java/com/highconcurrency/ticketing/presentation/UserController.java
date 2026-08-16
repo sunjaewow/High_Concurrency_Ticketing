@@ -19,8 +19,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<Long> createUser(@RequestBody UserCreateRequest request) {
-        Long userId = userUseCase.createUser(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(userId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userUseCase.createUser(request));
     }
 
 }
