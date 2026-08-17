@@ -2,9 +2,9 @@ package com.highconcurrency.ticketing.application.usecase.concert;
 
 import com.highconcurrency.ticketing.domain.concert.Concert;
 import com.highconcurrency.ticketing.domain.concert.ConcertRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,18 +21,20 @@ public class ConcertService implements ConcertUseCase {
     }
 
     @Override
-    public ConcertResponse getConcert(Long concertId) {
-        Concert concert = concertRepository.findById(concertId).orElseThrow(() -> new IllegalArgumentException("Concert not found with id: " + concertId));
-        return ConcertResponse.create(concert);
+    @Transactional(readOnly = true)
+    public Concert getConcert(Long concertId) {
+        return concertRepository.findById(concertId).orElseThrow(() -> new IllegalArgumentException("Concert not found with id: " + concertId));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ConcertResponse> getConcertList() {
         List<Concert> list = concertRepository.findAll();
-        return list.stream().map(ConcertResponse::create).toList();
+        return list.stream().map(ConcertResponse::from).toList();
     }
 
     @Override
+    @Transactional
     public void delete(Long concertId) {
         concertRepository.deleteById(concertId);
     }

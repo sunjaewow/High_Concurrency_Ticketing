@@ -7,7 +7,7 @@ public record ConcertResponse(
         int totalSeatCount,
         int reservedSeatCount
 ) {
-    public static ConcertResponse create(Concert concert) {
+    public static ConcertResponse from(Concert concert) {
         return new ConcertResponse(
                 concert.getTitle(),
                 concert.getTotalSeatCount(),
