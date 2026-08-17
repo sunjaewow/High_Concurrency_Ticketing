@@ -29,4 +29,11 @@ public class Concert extends BaseEntity {
                 .totalSeatCount(totalSeatCount)
                 .build();
     }
+
+    public void reserve() {
+        if (reservedCount >= totalSeatCount) {
+            throw new IllegalStateException("No available seats for this concert.");
+        }
+        reservedCount++;
+    }
 }
