@@ -27,6 +27,12 @@ public class ConcertService implements ConcertUseCase {
     }
 
     @Override
+    @Transactional
+    public Concert getConcertForUpdate(Long concertId) {
+        return concertRepository.findByIdForUpdate(concertId).orElseThrow(() -> new IllegalArgumentException("Concert not found with id: " + concertId));
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<ConcertResponse> getConcertList() {
         List<Concert> list = concertRepository.findAll();

@@ -8,10 +8,11 @@ public interface ConcertUseCase {
 
     Long createConcert(ConcertCreateRequest request);
 
+    Concert getConcert(Long concertId);
+
+    Concert getConcertForUpdate(Long concertId);
+
     List<ConcertResponse> getConcertList();
 
     void delete(Long concertId);
-
-    Concert getConcert(Long concertId);
-
 }

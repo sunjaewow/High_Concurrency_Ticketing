@@ -22,7 +22,7 @@ public class ReservationService implements ReservationUseCase {
     @Transactional
     public Long createReservation(Long concertId, Long userId) {
         User user = userUseCase.getUser(userId);
-        Concert concert = concertUseCase.getConcert(concertId);
+        Concert concert = concertUseCase.getConcertForUpdate(concertId);
         concert.reserve();
         return reservationRepository.save(Reservation.create(user, concert)).getId();
     }

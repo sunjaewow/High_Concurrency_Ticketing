@@ -8,6 +8,8 @@ public interface ConcertRepository {
 
     Optional<Concert> findById(Long concertId);
 
+    Optional<Concert> findByIdForUpdate(Long concertId);
+
     List<Concert> findAll();
 
     void deleteById(Long concertId);
