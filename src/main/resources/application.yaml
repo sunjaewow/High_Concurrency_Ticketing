@@ -25,3 +25,5 @@ spring:
 
 server:
   port: ${SERVER_PORT:8080}
+  tomcat:
+    max-connections: 50000
