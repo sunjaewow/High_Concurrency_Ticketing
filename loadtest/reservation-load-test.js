@@ -8,7 +8,6 @@ export const options = {
             executor: 'per-vu-iterations',
             vus: 50000,
             iterations: 1,
-            maxDuration: '2m',
         },
     },
     summaryTrendStats: ['avg', 'min', 'med', 'max', 'p(90)', 'p(95)', 'p(99)'],
