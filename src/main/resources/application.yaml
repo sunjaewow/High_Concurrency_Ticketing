@@ -27,6 +27,8 @@ server:
   port: ${SERVER_PORT:8080}
   tomcat:
     max-connections: 50000
+    mbeanregistry:
+      enabled: true # Tomcat 매트릭 수집하기 위한 설정
 
 management:
   endpoints:
