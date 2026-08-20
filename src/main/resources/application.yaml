@@ -6,6 +6,8 @@ spring:
     url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/ticketing?serverTimezone=Asia/Seoul&characterEncoding=UTF-8}
     username: ${SPRING_DATASOURCE_USERNAME:root}
     password: ${SPRING_DATASOURCE_PASSWORD:root}
+    hikari:
+      maximum-pool-size: 30
 
   jpa:
     open-in-view: false
@@ -16,7 +18,6 @@ spring:
         format_sql: true
         jdbc:
           time_zone: Asia/Seoul
-    show-sql: true
 
   data:
     redis:
@@ -29,6 +30,8 @@ server:
     max-connections: 50000
     mbeanregistry:
       enabled: true # Tomcat 매트릭 수집하기 위한 설정
+    threads:
+      max: 300
 
 management:
   endpoints:
