@@ -1,5 +1,7 @@
 package com.highconcurrency.ticketing.domain.concert;
 
+import com.highconcurrency.ticketing.application.usecase.concert.ConcertResponse;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -8,7 +10,9 @@ public interface ConcertRepository {
 
     Optional<Concert> findById(Long concertId);
 
-    Optional<Concert> findByIdForUpdate(Long concertId);
+    Optional<ConcertResponse> findByIdWithRemainingSeatCount(Long concertId);
+
+    List<ConcertResponse> findAllWithRemainingSeatCount();
 
     List<Concert> findAll();
 

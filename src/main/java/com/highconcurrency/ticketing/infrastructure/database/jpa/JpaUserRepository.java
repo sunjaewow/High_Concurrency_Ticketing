@@ -1,4 +1,4 @@
-package com.highconcurrency.ticketing.infrastructure.database;
+package com.highconcurrency.ticketing.infrastructure.database.jpa;
 
 import com.highconcurrency.ticketing.domain.user.User;
 import com.highconcurrency.ticketing.domain.user.UserRepository;

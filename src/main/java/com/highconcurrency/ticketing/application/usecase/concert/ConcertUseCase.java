@@ -10,9 +10,9 @@ public interface ConcertUseCase {
 
     Concert getConcert(Long concertId);
 
-    Concert getConcertForUpdate(Long concertId);
-
     List<ConcertResponse> getConcertList();
 
     void delete(Long concertId);
+
+    ConcertResponse getConcertResponse(Long concert);
 }

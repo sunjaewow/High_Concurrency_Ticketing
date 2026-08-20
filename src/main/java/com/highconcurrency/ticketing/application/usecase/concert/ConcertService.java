@@ -12,11 +12,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ConcertService implements ConcertUseCase {
     private final ConcertRepository concertRepository;
+    private final ConcertSeatChunkUseCase concertSeatChunkUseCase;
 
     @Override
     @Transactional
     public Long createConcert(ConcertCreateRequest request) {
         Concert savedConcert = concertRepository.save(Concert.create(request.title(), request.totalSeatCount()));
+        concertSeatChunkUseCase.initializeSeatChunks(savedConcert);
         return savedConcert.getId();
     }
 
@@ -27,16 +29,15 @@ public class ConcertService implements ConcertUseCase {
     }
 
     @Override
-    @Transactional
-    public Concert getConcertForUpdate(Long concertId) {
-        return concertRepository.findByIdForUpdate(concertId).orElseThrow(() -> new IllegalArgumentException("Concert not found with id: " + concertId));
+    @Transactional(readOnly = true)
+    public ConcertResponse getConcertResponse(Long concertId) {
+        return concertRepository.findByIdWithRemainingSeatCount(concertId).orElseThrow(() -> new IllegalArgumentException("Concert not found with id: " + concertId));
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<ConcertResponse> getConcertList() {
-        List<Concert> list = concertRepository.findAll();
-        return list.stream().map(ConcertResponse::from).toList();
+        return concertRepository.findAllWithRemainingSeatCount();
     }
 
     @Override

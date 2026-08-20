@@ -20,20 +20,10 @@ public class Concert extends BaseEntity {
     @Column(nullable = false)
     private int totalSeatCount;
 
-    @Column(nullable = false)
-    private int reservedCount;
-
     public static Concert create(String title, int totalSeatCount) {
         return Concert.builder()
                 .title(title)
                 .totalSeatCount(totalSeatCount)
                 .build();
-    }
-
-    public void reserve() {
-        if (reservedCount >= totalSeatCount) {
-            throw new IllegalStateException("No available seats for this concert.");
-        }
-        reservedCount++;
     }
 }

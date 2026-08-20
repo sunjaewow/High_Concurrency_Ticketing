@@ -1,17 +1,9 @@
 package com.highconcurrency.ticketing.application.usecase.concert;
 
-import com.highconcurrency.ticketing.domain.concert.Concert;
-
 public record ConcertResponse(
+        Long id,
         String title,
         int totalSeatCount,
-        int reservedSeatCount
+        Long remainingSeatCount
 ) {
-    public static ConcertResponse from(Concert concert) {
-        return new ConcertResponse(
-                concert.getTitle(),
-                concert.getTotalSeatCount(),
-                concert.getReservedCount()
-        );
-    }
 }

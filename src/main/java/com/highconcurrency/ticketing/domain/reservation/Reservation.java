@@ -2,6 +2,7 @@ package com.highconcurrency.ticketing.domain.reservation;
 
 import com.highconcurrency.ticketing.domain.BaseEntity;
 import com.highconcurrency.ticketing.domain.concert.Concert;
+import com.highconcurrency.ticketing.domain.concert.ConcertSeatChunk;
 import com.highconcurrency.ticketing.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -24,10 +25,15 @@ public class Reservation extends BaseEntity {
     @JoinColumn(name = "concert_id", nullable = false)
     private Concert concert;
 
-    public static Reservation create(User user, Concert concert) {
+    @ManyToOne
+    @JoinColumn(name = "concert_seat_chunk_id", nullable = false)
+    private ConcertSeatChunk concertSeatChunk;
+
+    public static Reservation create(User user, Concert concert, ConcertSeatChunk concertSeatChunk) {
         return Reservation.builder()
                 .user(user)
                 .concert(concert)
+                .concertSeatChunk(concertSeatChunk)
                 .build();
     }
 }

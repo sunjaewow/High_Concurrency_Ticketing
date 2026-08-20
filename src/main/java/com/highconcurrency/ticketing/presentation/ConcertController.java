@@ -24,7 +24,7 @@ public class ConcertController {
 
     @GetMapping("/{concertId}")
     public ConcertResponse getConcert(@PathVariable Long concertId) {
-        return ConcertResponse.from(concertUseCase.getConcert(concertId));
+        return concertUseCase.getConcertResponse(concertId);
     }
 
     @GetMapping
