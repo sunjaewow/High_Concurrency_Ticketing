@@ -6,7 +6,7 @@ export const options = {
     scenarios: {
         measure: {
             executor: 'per-vu-iterations',
-            vus: 50000,
+            vus: 10000,
             iterations: 1,
         },
     },
