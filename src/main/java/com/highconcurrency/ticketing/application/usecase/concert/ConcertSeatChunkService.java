@@ -1,5 +1,7 @@
 package com.highconcurrency.ticketing.application.usecase.concert;
 
+import com.highconcurrency.ticketing.application.common.ErrorCode;
+import com.highconcurrency.ticketing.application.common.HighConcurrencyTicketingException;
 import com.highconcurrency.ticketing.domain.concert.Concert;
 import com.highconcurrency.ticketing.domain.concert.ConcertSeatChunk;
 import com.highconcurrency.ticketing.domain.concert.ConcertSeatChunkRepository;
@@ -22,7 +24,7 @@ public class ConcertSeatChunkService implements ConcertSeatChunkUseCase {
     @Transactional
     public ConcertSeatChunk getConcertSeatChunkLocked(Concert concert, int chunkNo) {
         return concertSeatChunkRepository.findByIdForUpdate(concert, chunkNo)
-                .orElseThrow(() -> new IllegalArgumentException("Concert seat chunk not found"));
+                .orElseThrow(() -> new HighConcurrencyTicketingException(ErrorCode.NOT_FOUND, "해당 콘서트 좌석 청크가 없습니다."));
     }
 
     @Override

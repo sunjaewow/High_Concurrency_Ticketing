@@ -1,5 +1,7 @@
 package com.highconcurrency.ticketing.application.usecase.user;
 
+import com.highconcurrency.ticketing.application.common.ErrorCode;
+import com.highconcurrency.ticketing.application.common.HighConcurrencyTicketingException;
 import com.highconcurrency.ticketing.domain.user.User;
 import com.highconcurrency.ticketing.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ public class UserService implements UserUseCase {
     @Override
     @Transactional(readOnly = true)
     public User getUser(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new HighConcurrencyTicketingException(ErrorCode.NOT_FOUND, "해당 사용자가 없습니다."));
     }
 }

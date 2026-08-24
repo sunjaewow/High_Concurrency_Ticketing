@@ -1,4 +1,4 @@
-package com.highconcurrency.ticketing.presentation.controller;
+package com.highconcurrency.ticketing.presentation;
 
 import com.highconcurrency.ticketing.application.usecase.reservation.ReservationUseCase;
 import io.swagger.v3.oas.annotations.Operation;

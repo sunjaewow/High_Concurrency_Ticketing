@@ -1,5 +1,7 @@
 package com.highconcurrency.ticketing.application.usecase.reservation;
 
+import com.highconcurrency.ticketing.application.common.ErrorCode;
+import com.highconcurrency.ticketing.application.common.HighConcurrencyTicketingException;
 import com.highconcurrency.ticketing.application.out.ConcertSeatChunkPort;
 import com.highconcurrency.ticketing.application.usecase.concert.ConcertSeatChunkUseCase;
 import com.highconcurrency.ticketing.application.usecase.concert.ConcertUseCase;
@@ -38,6 +40,6 @@ public class ReservationService implements ReservationUseCase {
                 return reservationRepository.save(Reservation.create(user, concert, concertSeatChunkLocked)).getId();
             }
         }
-        throw new IllegalStateException("Failed to create reservation");
+        throw new HighConcurrencyTicketingException(ErrorCode.CONFLICT, "예약 가능한 좌석이 없습니다.");
     }
 }

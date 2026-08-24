@@ -1,5 +1,7 @@
 package com.highconcurrency.ticketing.application.usecase.concert;
 
+import com.highconcurrency.ticketing.application.common.ErrorCode;
+import com.highconcurrency.ticketing.application.common.HighConcurrencyTicketingException;
 import com.highconcurrency.ticketing.domain.concert.Concert;
 import com.highconcurrency.ticketing.domain.concert.ConcertRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,13 +27,15 @@ public class ConcertService implements ConcertUseCase {
     @Override
     @Transactional(readOnly = true)
     public Concert getConcert(Long concertId) {
-        return concertRepository.findById(concertId).orElseThrow(() -> new IllegalArgumentException("Concert not found with id: " + concertId));
+        return concertRepository.findById(concertId)
+                .orElseThrow(() -> new HighConcurrencyTicketingException(ErrorCode.NOT_FOUND, "해당 콘서트가 없습니다."));
     }
 
     @Override
     @Transactional(readOnly = true)
     public ConcertResponse getConcertResponse(Long concertId) {
-        return concertRepository.findByIdWithRemainingSeatCount(concertId).orElseThrow(() -> new IllegalArgumentException("Concert not found with id: " + concertId));
+        return concertRepository.findByIdWithRemainingSeatCount(concertId)
+                .orElseThrow(() -> new HighConcurrencyTicketingException(ErrorCode.NOT_FOUND, "해당 콘서트가 없습니다."));
     }
 
     @Override
