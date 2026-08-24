@@ -41,6 +41,6 @@ public class ConcertSeatChunkService implements ConcertSeatChunkUseCase {
             concertSeatChunkList.add(ConcertSeatChunk.create(concert, chunkNo, CHUNK_SIZE));
         }
 
-        concertSeatChunkRepository.saveAll(concertSeatChunkList);
+        concertSeatChunkRepository.saveChunks(concertSeatChunkList);
     }
 }
