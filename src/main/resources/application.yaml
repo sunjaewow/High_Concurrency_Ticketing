@@ -33,6 +33,13 @@ server:
     threads:
       max: 300
 
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    path: /swagger
+    enabled: true
+
 management:
   endpoints:
     web:
