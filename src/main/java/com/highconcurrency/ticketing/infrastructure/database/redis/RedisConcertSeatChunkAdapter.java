@@ -20,4 +20,9 @@ public class RedisConcertSeatChunkAdapter implements ConcertSeatChunkPort {
         Long nextNum = redisTemplate.opsForValue().increment(key);
         return (nextNum.intValue() - 1) % chunkCount;
     }
+
+    @Override
+    public void deleteChunkNo(Concert concert) {
+        redisTemplate.delete(KEY_PREFIX + concert.getId());
+    }
 }

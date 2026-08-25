@@ -45,4 +45,10 @@ public class ConcertSeatChunkService implements ConcertSeatChunkUseCase {
 
         concertSeatChunkRepository.saveChunks(concertSeatChunkList);
     }
+
+    @Override
+    @Transactional
+    public void deleteByConcert(Concert concert) {
+        concertSeatChunkRepository.deleteByConcert(concert);
+    }
 }

@@ -13,8 +13,6 @@ public interface ConcertRepository {
     Optional<ConcertResponse> findByIdWithRemainingSeatCount(Long concertId);
 
     List<ConcertResponse> findAllWithRemainingSeatCount();
-
-    List<Concert> findAll();
-
-    void deleteById(Long concertId);
+    
+    void delete(Concert concert);
 }

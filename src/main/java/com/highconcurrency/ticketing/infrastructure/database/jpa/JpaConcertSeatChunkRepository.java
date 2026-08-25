@@ -6,6 +6,7 @@ import com.highconcurrency.ticketing.domain.concert.ConcertSeatChunkRepository;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -26,4 +27,9 @@ public interface JpaConcertSeatChunkRepository extends JpaRepository<ConcertSeat
     default void saveChunks(List<ConcertSeatChunk> concertSeatChunkList) {
         saveAll(concertSeatChunkList);
     }
+
+    @Override
+    @Modifying
+    @Query("delete from ConcertSeatChunk c where c.concert = :concert")
+    void deleteByConcert(@Param("concert") Concert concert);
 }

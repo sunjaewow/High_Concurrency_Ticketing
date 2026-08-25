@@ -9,4 +9,6 @@ public interface ConcertSeatChunkRepository {
     int countByConcert(Concert concert);
 
     void saveChunks(List<ConcertSeatChunk> concertSeatChunkList);
+
+    void deleteByConcert(Concert concert);
 }

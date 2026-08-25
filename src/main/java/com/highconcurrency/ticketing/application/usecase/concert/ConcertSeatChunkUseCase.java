@@ -9,4 +9,6 @@ public interface ConcertSeatChunkUseCase {
     int getChunkCount(Concert concert);
 
     void initializeSeatChunks(Concert concert);
+
+    void deleteByConcert(Concert concert);
 }
