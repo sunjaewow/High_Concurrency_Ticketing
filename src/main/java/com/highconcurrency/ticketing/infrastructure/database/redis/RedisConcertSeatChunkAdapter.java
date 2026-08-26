@@ -3,10 +3,12 @@ package com.highconcurrency.ticketing.infrastructure.database.redis;
 import com.highconcurrency.ticketing.application.out.ConcertSeatChunkPort;
 import com.highconcurrency.ticketing.domain.concert.Concert;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@Profile("redis")
 @RequiredArgsConstructor
 public class RedisConcertSeatChunkAdapter implements ConcertSeatChunkPort {
 
