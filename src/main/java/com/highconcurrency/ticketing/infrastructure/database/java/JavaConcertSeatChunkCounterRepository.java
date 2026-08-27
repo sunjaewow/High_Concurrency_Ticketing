@@ -1,7 +1,7 @@
 package com.highconcurrency.ticketing.infrastructure.database.java;
 
-import com.highconcurrency.ticketing.application.out.ConcertSeatChunkPort;
 import com.highconcurrency.ticketing.domain.concert.Concert;
+import com.highconcurrency.ticketing.domain.concert.ConcertSeatChunkCounterRepository;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
 @Profile("java")
-public class JavaConcertSeatChunkAdapter implements ConcertSeatChunkPort {
+public class JavaConcertSeatChunkCounterRepository implements ConcertSeatChunkCounterRepository {
 
     private final ConcurrentHashMap<Long, AtomicInteger> chunkNoByConcertId = new ConcurrentHashMap<>();
 

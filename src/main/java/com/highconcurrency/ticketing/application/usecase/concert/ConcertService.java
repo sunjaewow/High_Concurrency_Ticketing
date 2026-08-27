@@ -2,9 +2,9 @@ package com.highconcurrency.ticketing.application.usecase.concert;
 
 import com.highconcurrency.ticketing.application.common.ErrorCode;
 import com.highconcurrency.ticketing.application.common.HighConcurrencyTicketingException;
-import com.highconcurrency.ticketing.application.out.ConcertSeatChunkPort;
 import com.highconcurrency.ticketing.domain.concert.Concert;
 import com.highconcurrency.ticketing.domain.concert.ConcertRepository;
+import com.highconcurrency.ticketing.domain.concert.ConcertSeatChunkCounterRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +18,7 @@ import java.util.List;
 public class ConcertService implements ConcertUseCase {
     private final ConcertRepository concertRepository;
     private final ConcertSeatChunkUseCase concertSeatChunkUseCase;
-    private final ConcertSeatChunkPort concertSeatChunkPort;
+    private final ConcertSeatChunkCounterRepository concertSeatChunkCounterRepository;
 
     @Override
     @Transactional
@@ -57,7 +57,7 @@ public class ConcertService implements ConcertUseCase {
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
             public void afterCommit() {
-                concertSeatChunkPort.deleteChunkNo(concert);
+                concertSeatChunkCounterRepository.deleteChunkNo(concert);
             }
         });
     }
