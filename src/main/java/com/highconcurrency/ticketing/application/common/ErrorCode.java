@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
 
     NOT_FOUND(HttpStatus.NOT_FOUND),
+    FORBIDDEN(HttpStatus.FORBIDDEN),
     CONFLICT(HttpStatus.CONFLICT),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR);
 
