@@ -3,12 +3,12 @@ package com.highconcurrency.ticketing.infrastructure.database.java;
 import com.highconcurrency.ticketing.domain.concert.Concert;
 import com.highconcurrency.ticketing.domain.concert.ConcertSeatChunkCounterRepository;
 import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@Repository
+@Component
 @Profile("java")
 public class JavaConcertSeatChunkCounterRepository implements ConcertSeatChunkCounterRepository {
 
