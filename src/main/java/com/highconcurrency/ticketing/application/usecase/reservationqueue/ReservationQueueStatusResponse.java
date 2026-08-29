@@ -1,9 +1,12 @@
 package com.highconcurrency.ticketing.application.usecase.reservationqueue;
 
+import lombok.Builder;
+
+@Builder
 public record ReservationQueueStatusResponse(
         Long concertId,
         Long userId,
-        ReservationQueueStatus status,
+        ReservationQueueStatusType status,
         int seq
 ) {
 }

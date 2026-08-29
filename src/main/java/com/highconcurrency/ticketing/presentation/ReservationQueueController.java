@@ -7,8 +7,10 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RestController
 @RequestMapping("/reservation-queues/{concertId}/users/{userId}")
@@ -34,6 +36,18 @@ public class ReservationQueueController {
             @Parameter(description = "사용자 ID") @PathVariable Long userId
     ) {
         return ResponseEntity.ok(reservationQueueUseCase.getQueueStatus(concertId, userId));
+    }
+
+    @GetMapping(
+            value = "/events",
+            produces = MediaType.TEXT_EVENT_STREAM_VALUE
+    )
+    @Operation(summary = "예약 대기열 상태 조회 by SSE")
+    public SseEmitter getReservationQueueStatusSSE(
+            @Parameter(description = "콘서트 ID") @PathVariable Long concertId,
+            @Parameter(description = "사용자 ID") @PathVariable Long userId
+    ) {
+        return reservationQueueUseCase.subscribe(concertId, userId);
     }
 
     @DeleteMapping

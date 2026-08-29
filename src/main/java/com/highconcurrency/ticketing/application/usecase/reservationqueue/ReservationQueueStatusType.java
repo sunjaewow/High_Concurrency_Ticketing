@@ -1,6 +1,6 @@
 package com.highconcurrency.ticketing.application.usecase.reservationqueue;
 
-public enum ReservationQueueStatus {
+public enum ReservationQueueStatusType {
     WAITING,
     PERMITTED,
     NOT_ENTERED
