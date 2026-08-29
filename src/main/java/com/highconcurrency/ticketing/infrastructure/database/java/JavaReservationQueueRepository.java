@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Component
 public class JavaReservationQueueRepository implements ReservationQueueRepository {
 
-    private static final int MAX_PERMITTED_SIZE = 1000;
+    private static final int MAX_PERMITTED_SIZE = 10000;
 
     private final ConcurrentHashMap<Long, AtomicInteger> nextSeqByConcert = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Long, AtomicInteger> lastPermittedSeqByConcert = new ConcurrentHashMap<>();
