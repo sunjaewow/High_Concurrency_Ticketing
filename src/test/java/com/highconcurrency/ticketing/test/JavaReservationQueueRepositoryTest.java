@@ -1,8 +1,8 @@
 package com.highconcurrency.ticketing.test;
 
 import com.highconcurrency.ticketing.application.common.HighConcurrencyTicketingException;
-import com.highconcurrency.ticketing.application.usecase.reservationqueue.ReservationQueueStatus;
 import com.highconcurrency.ticketing.application.usecase.reservationqueue.ReservationQueueStatusResponse;
+import com.highconcurrency.ticketing.application.usecase.reservationqueue.ReservationQueueStatusType;
 import com.highconcurrency.ticketing.infrastructure.database.java.JavaReservationQueueRepository;
 import org.junit.jupiter.api.Test;
 
@@ -25,7 +25,7 @@ class JavaReservationQueueRepositoryTest {
     void 허용_인원_안에_있는_사용자는_예약_가능_상태가_된다() {
         ReservationQueueStatusResponse response = reservationQueueRepository.enter(1L, 1L);
 
-        assertThat(response.status()).isEqualTo(ReservationQueueStatus.PERMITTED);
+        assertThat(response.status()).isEqualTo(ReservationQueueStatusType.PERMITTED);
         assertThat(response.seq()).isZero();
     }
 
@@ -37,7 +37,7 @@ class JavaReservationQueueRepositoryTest {
 
         ReservationQueueStatusResponse response = reservationQueueRepository.enter(1L, 10001L);
 
-        assertThat(response.status()).isEqualTo(ReservationQueueStatus.WAITING);
+        assertThat(response.status()).isEqualTo(ReservationQueueStatusType.WAITING);
         assertThat(response.seq()).isEqualTo(1);
     }
 
@@ -47,10 +47,14 @@ class JavaReservationQueueRepositoryTest {
             reservationQueueRepository.enter(1L, userId);
         }
 
-        reservationQueueRepository.leave(1L, 1L);
+        boolean wasPermitted = reservationQueueRepository.leaveAndWasPermitted(1L, 1L);
+        assertThat(wasPermitted).isTrue();
+
+        assertThat(reservationQueueRepository.permitNextWaitingUser(1L)).contains(10001L);
+
         ReservationQueueStatusResponse response = reservationQueueRepository.getStatus(1L, 10001L);
 
-        assertThat(response.status()).isEqualTo(ReservationQueueStatus.PERMITTED);
+        assertThat(response.status()).isEqualTo(ReservationQueueStatusType.PERMITTED);
         assertThat(response.seq()).isZero();
     }
 
@@ -60,10 +64,12 @@ class JavaReservationQueueRepositoryTest {
             reservationQueueRepository.enter(1L, userId);
         }
 
-        reservationQueueRepository.leave(1L, 10001L);
+        boolean wasPermitted = reservationQueueRepository.leaveAndWasPermitted(1L, 10001L);
+        assertThat(wasPermitted).isFalse();
+
         ReservationQueueStatusResponse response = reservationQueueRepository.getStatus(1L, 10002L);
 
-        assertThat(response.status()).isEqualTo(ReservationQueueStatus.WAITING);
+        assertThat(response.status()).isEqualTo(ReservationQueueStatusType.WAITING);
         assertThat(response.seq()).isEqualTo(2);
     }
 
