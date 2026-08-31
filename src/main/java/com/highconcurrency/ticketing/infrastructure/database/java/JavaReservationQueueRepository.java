@@ -19,7 +19,7 @@ public class JavaReservationQueueRepository implements ReservationQueueRepositor
 
     private final ConcurrentHashMap<Long, AtomicInteger> nextSeqByConcert = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Long, AtomicInteger> lastPermittedSeqByConcert = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<Long, int[]> prefixSumByConcert = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Long, WaitingSeqTree> waitingSeqByConcert = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<ConcertUser, Integer> seqByConcertAndUser = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<ConcertSeq, Long> userIdByConcertAndSeq = new ConcurrentHashMap<>();
 
@@ -30,10 +30,13 @@ public class JavaReservationQueueRepository implements ReservationQueueRepositor
         seqByConcertAndUser.computeIfAbsent(concertUser, k -> {
             int seq = nextSeqByConcert.computeIfAbsent(concertId,
                     concert -> new AtomicInteger(1)).getAndIncrement();
-            validateQueueSize(seq);
+
+            if (seq > MAX_QUEUE_SIZE) {
+                throw new HighConcurrencyTicketingException(ErrorCode.CONFLICT, "대기열 최대 인원을 초과했습니다.");
+            }
 
             userIdByConcertAndSeq.put(new ConcertSeq(concertId, seq), userId);
-            addPrefixSum(concertId, seq);
+            waitingSeqByConcert.computeIfAbsent(concertId, concert -> new WaitingSeqTree(MAX_QUEUE_SIZE)).add(seq, 1);
 
             return seq;
         });
@@ -52,8 +55,9 @@ public class JavaReservationQueueRepository implements ReservationQueueRepositor
             return new ReservationQueueStatusResponse(concertId, userId, ReservationQueueStatusType.PERMITTED, 0);
         }
 
+        WaitingSeqTree waitingSeqTree = waitingSeqByConcert.get(concertId);
         return new ReservationQueueStatusResponse(concertId, userId, ReservationQueueStatusType.WAITING,
-                getRank(concertId, seq) - getRank(concertId, lastPermittedSeq));
+                waitingSeqTree.getRank(seq) - waitingSeqTree.getRank(lastPermittedSeq));
     }
 
     @Override
@@ -70,7 +74,7 @@ public class JavaReservationQueueRepository implements ReservationQueueRepositor
         if (seq == null) throw new HighConcurrencyTicketingException(ErrorCode.NOT_FOUND, "해당 사용자가 대기열에 없습니다.");
 
         userIdByConcertAndSeq.remove(new ConcertSeq(concertId, seq));
-        removePrefixSum(concertId, seq);
+        waitingSeqByConcert.get(concertId).add(seq, -1);
         return seq <= lastPermittedSeqByConcert.computeIfAbsent(concertId, k -> new AtomicInteger(MAX_PERMITTED_SIZE)).get();
     }
 
@@ -94,39 +98,6 @@ public class JavaReservationQueueRepository implements ReservationQueueRepositor
     }
 
     private record ConcertSeq(Long concertId, int seq) {
-    }
 
-    private void validateQueueSize(int seq) {
-        if (seq > MAX_QUEUE_SIZE) {
-            throw new HighConcurrencyTicketingException(ErrorCode.CONFLICT, "대기열 최대 인원을 초과했습니다.");
-        }
-    }
-
-    private void addPrefixSum(Long concertId, int seq) {
-        int[] prefixSum = prefixSumByConcert.computeIfAbsent(concertId, concert -> new int[MAX_QUEUE_SIZE + 1]);
-        synchronized (prefixSum) {
-            prefixSum[seq] = prefixSum[seq - 1] + 1;
-        }
-    }
-
-    private void removePrefixSum(Long concertId, int seq) {
-        int[] prefixSum = prefixSumByConcert.get(concertId);
-        int lastSeq = Math.min(nextSeqByConcert.get(concertId).get() - 1, MAX_QUEUE_SIZE);
-
-        synchronized (prefixSum) {
-            for (int index = seq; index <= lastSeq; index++) {
-                prefixSum[index]--;
-            }
-        }
-    }
-
-    private int getRank(Long concertId, int seq) {
-        int[] prefixSum = prefixSumByConcert.get(concertId);
-        if (seq <= 0) return 0;
-        if (seq > MAX_QUEUE_SIZE) return prefixSum[MAX_QUEUE_SIZE];
-
-        synchronized (prefixSum) {
-            return prefixSum[seq];
-        }
     }
 }
