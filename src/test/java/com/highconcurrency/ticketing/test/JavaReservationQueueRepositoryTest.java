@@ -59,7 +59,7 @@ class JavaReservationQueueRepositoryTest {
     }
 
     @Test
-    void 대기_중인_사용자가_대기열을_떠나도_다음_사용자는_그대로_대기_상태다() {
+    void 대기_중인_사용자가_대기열을_떠나면_다음_대기_사용자의_순번이_앞당겨진다() {
         for (long userId = 1L; userId <= 10002L; userId++) {
             reservationQueueRepository.enter(1L, userId);
         }
@@ -70,7 +70,7 @@ class JavaReservationQueueRepositoryTest {
         ReservationQueueStatusResponse response = reservationQueueRepository.getStatus(1L, 10002L);
 
         assertThat(response.status()).isEqualTo(ReservationQueueStatusType.WAITING);
-        assertThat(response.seq()).isEqualTo(2);
+        assertThat(response.seq()).isEqualTo(1);
     }
 
     @Test
