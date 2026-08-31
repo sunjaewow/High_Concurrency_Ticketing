@@ -74,6 +74,21 @@ class JavaReservationQueueRepositoryTest {
     }
 
     @Test
+    void 여러_대기_사용자가_이탈하면_남은_사용자의_순번이_이탈한_수만큼_앞당겨진다() {
+        for (long userId = 1L; userId <= 10005L; userId++) {
+            reservationQueueRepository.enter(1L, userId);
+        }
+
+        reservationQueueRepository.leaveAndWasPermitted(1L, 10001L);
+        reservationQueueRepository.leaveAndWasPermitted(1L, 10003L);
+
+        ReservationQueueStatusResponse response = reservationQueueRepository.getStatus(1L, 10005L);
+
+        assertThat(response.status()).isEqualTo(ReservationQueueStatusType.WAITING);
+        assertThat(response.seq()).isEqualTo(3);
+    }
+
+    @Test
     void 대기열에_없는_사용자_상태를_조회하면_예외가_발생한다() {
         assertThatThrownBy(() -> reservationQueueRepository.getStatus(1L, 1L))
                 .isInstanceOf(HighConcurrencyTicketingException.class);
