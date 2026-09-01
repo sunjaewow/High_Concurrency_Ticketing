@@ -1,13 +1,8 @@
 spring:
-  application:
-    name: High_Concurrency_Ticketing
-  profiles:
-    active: ${SPRING_PROFILES_ACTIVE:java}
-
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/ticketing?serverTimezone=Asia/Seoul&characterEncoding=UTF-8}
-    username: ${SPRING_DATASOURCE_USERNAME:root}
-    password: ${SPRING_DATASOURCE_PASSWORD:root}
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
     hikari:
       maximum-pool-size: 30
 
@@ -21,12 +16,8 @@ spring:
         jdbc:
           time_zone: Asia/Seoul
 
-  data:
-    redis:
-      host: ${SPRING_DATA_REDIS_HOST:localhost}
-      port: ${SPRING_DATA_REDIS_PORT:6379}
-
 server:
+  port: 8080
   tomcat:
     max-connections: 100000
     mbeanregistry:
@@ -42,7 +33,9 @@ springdoc:
     enabled: true
 
 management:
+  server:
+    port: 9091
   endpoints:
     web:
       exposure:
-        include: prometheus
+        include: health,prometheus

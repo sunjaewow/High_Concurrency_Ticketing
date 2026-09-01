@@ -1,0 +1,11 @@
+services:
+
+  app:
+    image: sunjaegood/high-concurrency-ticketing-api:dev
+    ports:
+      - "8080:8080"
+      - "9091:9091"
+    env_file:
+      - .env.dev
+    environment:
+      TZ: Asia/Seoul

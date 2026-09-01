@@ -31,10 +31,10 @@ services:
     environment:
       GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-root}
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-root}
-    volumes:
-      - grafana-data:/var/lib/grafana
     depends_on:
       - prometheus
+    volumes:
+      - grafana-data:/var/lib/grafana
 
 volumes:
   mysql-data:
