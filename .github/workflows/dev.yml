@@ -1,0 +1,47 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Docker Login
+        run: echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+
+      - name: Docker Image Build
+        run: docker build -t sunjaegood/high-concurrency-ticketing-api:dev .
+
+      - name: Docker Image Push
+        run: docker push sunjaegood/high-concurrency-ticketing-api:dev
+
+      - name: scp to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}케
+          source: docker-compose-dev.yml
+          target: /home/ec2-user/api
+
+      - name: SSH로 EC2에 접속
+        uses: appleboy/ssh-action@v1.2.0
+        env:
+          ENV: ${{ secrets.ENV }}
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          envs: ENV
+          script: |
+            cd /home/ec2-user/api
+            echo "$ENV" > .env
+            sudo docker pull sunjaegood/high-concurrency-ticketing-api:dev
+            sudo docker compose -f docker-compose-dev.yml up -d --remove-orphans
