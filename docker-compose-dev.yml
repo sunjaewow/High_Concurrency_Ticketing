@@ -9,3 +9,7 @@ services:
       - .env.dev
     environment:
       TZ: Asia/Seoul
+    ulimits:
+      nofile:
+        soft: 200000
+        hard: 200000
