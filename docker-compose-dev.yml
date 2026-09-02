@@ -6,7 +6,7 @@ services:
       - "8080:8080"
       - "9091:9091"
     env_file:
-      - .env.dev
+      - .env
     environment:
       TZ: Asia/Seoul
     ulimits:
