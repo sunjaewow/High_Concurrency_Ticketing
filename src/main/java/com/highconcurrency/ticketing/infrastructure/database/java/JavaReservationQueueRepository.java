@@ -5,6 +5,7 @@ import com.highconcurrency.ticketing.application.common.HighConcurrencyTicketing
 import com.highconcurrency.ticketing.application.usecase.reservationqueue.ReservationQueueStatusResponse;
 import com.highconcurrency.ticketing.application.usecase.reservationqueue.ReservationQueueStatusType;
 import com.highconcurrency.ticketing.domain.reservation.ReservationQueueRepository;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -12,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
+@Profile("java")
 public class JavaReservationQueueRepository implements ReservationQueueRepository {
 
     private static final int MAX_PERMITTED_SIZE = 10000;
