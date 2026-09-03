@@ -21,7 +21,7 @@ public class JavaConcertSeatChunkCounterRepository implements ConcertSeatChunkCo
     }
 
     @Override
-    public void deleteChunkNo(Concert concert) {
+    public void deleteByConcert(Concert concert) {
         chunkNoByConcertId.remove(concert.getId());
     }
 }

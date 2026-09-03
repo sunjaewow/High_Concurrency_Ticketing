@@ -57,7 +57,7 @@ public class ConcertService implements ConcertUseCase {
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
             public void afterCommit() {
-                concertSeatChunkCounterRepository.deleteChunkNo(concert);
+                concertSeatChunkCounterRepository.deleteByConcert(concert);
             }
         });
     }

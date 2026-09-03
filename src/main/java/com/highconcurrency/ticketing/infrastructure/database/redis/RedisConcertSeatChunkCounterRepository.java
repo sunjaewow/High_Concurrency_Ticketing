@@ -24,7 +24,7 @@ public class RedisConcertSeatChunkCounterRepository implements ConcertSeatChunkC
     }
 
     @Override
-    public void deleteChunkNo(Concert concert) {
+    public void deleteByConcert(Concert concert) {
         redisTemplate.delete(KEY_PREFIX + concert.getId());
     }
 }
